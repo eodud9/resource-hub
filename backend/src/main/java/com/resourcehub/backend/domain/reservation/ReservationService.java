@@ -8,6 +8,8 @@ import com.resourcehub.backend.domain.user.User;
 import com.resourcehub.backend.domain.user.UserRepository;
 import com.resourcehub.backend.exception.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,9 @@ public class ReservationService {
         Resource resource = resourceRepository.findById(request.getResourceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Resource Not Found"));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = (User) authentication.getPrincipal();
 
         if(!request.getStartAt().isBefore(request.getEndAt())){
             throw new ReservationInvalidException("예약 시간이 유효하지 않습니다.");
@@ -60,6 +63,24 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(()-> new ReservationNotFoundException("해당 예약이 존재하지 않습니다."));
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = (User) authentication.getPrincipal();
+
+        System.out.println("예약 사용자 ID = " + reservation.getUser().getId());
+        System.out.println("현재 사용자 ID = " + user.getId());
+
+        if(!reservation.getUser().getId().equals(user.getId())){
+            throw new UserConflictException("유효하지 않은 사용자의 정보입니다.");
+        }
+
         reservation.cancel();
     }
 }
+
+//
+//{
+//        "resourceId": 1,
+//        "startAt": "2026-09-07T20:00:00",
+//        "endAt": "2026-09-07T21:00:00"
+//        }

@@ -13,9 +13,6 @@ public class ReservationCreateRequest {
     private Long resourceId;
 
     @NotNull
-    private Long userId;
-
-    @NotNull
     private LocalDateTime startAt;
 
     @NotNull
