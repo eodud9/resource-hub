@@ -2,6 +2,7 @@ package com.resourcehub.backend.domain.reservation;
 
 import com.resourcehub.backend.domain.resource.Resource;
 import com.resourcehub.backend.domain.user.User;
+import com.resourcehub.backend.exception.ReservationInvalidException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,11 @@ public class Reservation {
     }
 
     public void cancel(){
+
+        if(this.reservationStatus != ReservationStatus.RESERVED){
+            throw new ReservationInvalidException("유효하지 않은 취소입니다.");
+        }
+
         this.reservationStatus = ReservationStatus.CANCELED;
     }
 }

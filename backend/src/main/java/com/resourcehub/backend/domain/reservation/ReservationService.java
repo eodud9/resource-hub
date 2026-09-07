@@ -21,10 +21,12 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ResourceRepository resourceRepository;
-    private final UserRepository userRepository;
 
     public List<ReservationResponse> getReservations(){
-        List<Reservation> reservations = reservationRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
 
         return reservations.stream()
                 .map(ReservationResponse::new)
@@ -33,6 +35,14 @@ public class ReservationService {
 
     public ReservationResponse getReservation(Long id){
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException("해당 예약이 존재하지 않습니다."));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        if(!(reservation.getUser().getId().equals(user.getId()))){
+            throw new UserConflictException("유효하지 않은 사용자입니다.");
+        }
+
         return new ReservationResponse(reservation);
     }
 
@@ -77,10 +87,3 @@ public class ReservationService {
         reservation.cancel();
     }
 }
-
-//
-//{
-//        "resourceId": 1,
-//        "startAt": "2026-09-07T20:00:00",
-//        "endAt": "2026-09-07T21:00:00"
-//        }
