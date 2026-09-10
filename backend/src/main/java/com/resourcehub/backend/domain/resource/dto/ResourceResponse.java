@@ -4,8 +4,10 @@ import com.resourcehub.backend.domain.resource.Resource;
 import com.resourcehub.backend.domain.resource.ResourceStatus;
 import com.resourcehub.backend.domain.resource.ResourceType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ResourceResponse {
     private Long id;
     private String name;

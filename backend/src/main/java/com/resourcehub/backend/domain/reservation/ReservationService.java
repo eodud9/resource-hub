@@ -86,9 +86,6 @@ public class ReservationService {
 
         User user = (User) authentication.getPrincipal();
 
-        System.out.println("예약 사용자 ID = " + reservation.getUser().getId());
-        System.out.println("현재 사용자 ID = " + user.getId());
-
         if(!reservation.getUser().getId().equals(user.getId())){
             throw new UserConflictException("유효하지 않은 사용자의 정보입니다.");
         }
