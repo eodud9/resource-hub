@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(user,
                     null,
-                            Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+                            List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
                     );
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -56,13 +58,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         }
 
-        System.out.println("Authentication = "
-                + SecurityContextHolder.getContext().getAuthentication());
 
-        System.out.println("Authorities = "
-                + SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authorization != null){
+            System.out.println(authentication.getAuthorities());
+        }
 
         filterChain.doFilter(request, response);
 

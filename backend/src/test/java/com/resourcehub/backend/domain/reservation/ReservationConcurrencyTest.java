@@ -1,6 +1,5 @@
-package com.resourcehub.backend;
+package com.resourcehub.backend.domain.reservation;
 
-import com.resourcehub.backend.domain.reservation.ReservationService;
 import com.resourcehub.backend.domain.reservation.dto.ReservationCreateRequest;
 import com.resourcehub.backend.domain.user.User;
 import com.resourcehub.backend.domain.user.UserRepository;
