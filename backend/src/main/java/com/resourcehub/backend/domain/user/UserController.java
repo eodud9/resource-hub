@@ -1,8 +1,6 @@
 package com.resourcehub.backend.domain.user;
 
-import com.resourcehub.backend.domain.user.dto.LoginRequest;
-import com.resourcehub.backend.domain.user.dto.UserCreateRequest;
-import com.resourcehub.backend.domain.user.dto.UserResponse;
+import com.resourcehub.backend.domain.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
+    public LoginResponse login(@RequestBody LoginRequest request){
         return userService.login(request);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(){
+        userService.logout();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/refresh")
+    public LoginResponse refresh(@Valid @RequestBody RefreshTokenRequest request){
+        return userService.refresh(request);
     }
 }

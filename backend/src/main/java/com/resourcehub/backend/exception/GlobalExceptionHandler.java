@@ -1,6 +1,7 @@
 package com.resourcehub.backend.exception;
 
 import com.resourcehub.backend.common.dto.ErrorResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -59,5 +60,12 @@ public class GlobalExceptionHandler {
                 .orElse("Invalid Request");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
+    }
+
+    @ExceptionHandler(RefreshTokenInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshToken(RefreshTokenInvalidException e){
+        ErrorResponse response = new ErrorResponse(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }

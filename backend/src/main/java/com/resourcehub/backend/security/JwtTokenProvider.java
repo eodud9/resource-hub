@@ -20,15 +20,30 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    private Long expiration = 1000L * 60L * 60L;
+    private Long accessTokenExpiration = 1000L * 60L * 60L;
 
-    public String generateToken(User user){
+    private Long refreshTokenExpiration = 1000L * 60L * 60L * 24L * 7L;
 
-        Date expirationTime = new Date(System.currentTimeMillis() + expiration);
+    public String generateAccessToken(User user){
+
+        Date expirationTime = new Date(System.currentTimeMillis() + accessTokenExpiration);
 
         return Jwts.builder()
                 .subject(user.getEmail())
                 .expiration(expirationTime)
+                .claim("type", "ACCESS")
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateRefreshToken(User user){
+
+        Date expirationTime = new Date(System.currentTimeMillis() + refreshTokenExpiration);
+
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .expiration(expirationTime)
+                .claim("type", "REFRESH")
                 .signWith(key)
                 .compact();
     }
@@ -52,5 +67,15 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    public String getType(String token){
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("type", String.class);
+
     }
 }

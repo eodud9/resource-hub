@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authorization.substring(7);
 
-        if(jwtTokenProvider.validateToken(token)){
+        if(jwtTokenProvider.validateToken(token) && "ACCESS".equals(jwtTokenProvider.getType(token))){
             String email = jwtTokenProvider.getSubject(token);
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
@@ -56,13 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             context.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(context);
 
-        }
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authorization != null){
-            System.out.println(authentication.getAuthorities());
         }
 
         filterChain.doFilter(request, response);
