@@ -25,7 +25,7 @@ public class ReservationService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
+        List<Reservation> reservations = reservationRepository.findByUserIdWithResource(user.getId());
 
         return reservations.stream()
                 .map(ReservationResponse::new)
