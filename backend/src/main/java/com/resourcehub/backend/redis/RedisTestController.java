@@ -1,4 +1,4 @@
-package com.resourcehub.backend.config;
+package com.resourcehub.backend.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

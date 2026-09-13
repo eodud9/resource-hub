@@ -1,4 +1,4 @@
-package com.resourcehub.backend.config;
+package com.resourcehub.backend.redis;
 
 import com.resourcehub.backend.domain.resource.dto.ResourceResponse;
 import org.springframework.context.annotation.Bean;
