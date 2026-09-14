@@ -6,11 +6,16 @@ import com.resourcehub.backend.domain.resource.Resource;
 import com.resourcehub.backend.domain.resource.ResourceRepository;
 import com.resourcehub.backend.domain.user.User;
 import com.resourcehub.backend.exception.*;
+import com.resourcehub.backend.kafka.ReservationCreatedEvent;
+import com.resourcehub.backend.kafka.outboxEvent.OutboxEvent;
+import com.resourcehub.backend.kafka.outboxEvent.OutboxEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
+
 import java.util.List;
 
 
@@ -20,6 +25,8 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ResourceRepository resourceRepository;
+    private final OutboxEventRepository outboxEventRepository;
+    private final ObjectMapper objectMapper;
 
     public List<ReservationResponse> getReservations(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +71,21 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(resource, request.getStartAt(), request.getEndAt(), user);
 
-        return new ReservationResponse(reservationRepository.save(reservation));
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        ReservationCreatedEvent reservationCreatedEvent = new ReservationCreatedEvent(
+                savedReservation.getId(),
+                savedReservation.getUser().getId(),
+                savedReservation.getResource().getId()
+        );
+
+        String payload = objectMapper.writeValueAsString(reservationCreatedEvent);
+
+        OutboxEvent outboxEvent = new OutboxEvent("reservation-create", payload);
+
+        outboxEventRepository.save(outboxEvent);
+
+        return new ReservationResponse(savedReservation);
     }
 
     @Transactional
