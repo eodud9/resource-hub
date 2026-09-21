@@ -64,10 +64,25 @@ jobs:
        push: true
        tags: ghcr.io/${{ github.repository_owner }}/resourcehub:latest
 
-   - name: Debug OIDC claims
-     uses: github/actions-oidc-debugger@main
-     with:
-       audience: sts.amazonaws.com
+   - name: Check OIDC subject
+     shell: bash
+     run: |
+       TOKEN_RESPONSE=$(curl -sS \
+         -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+         "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com")
+
+       TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.value')
+
+       PAYLOAD=$(echo "$TOKEN" | cut -d '.' -f2)
+       PAYLOAD="${PAYLOAD//-/+}"
+       PAYLOAD="${PAYLOAD//_/\/}"
+
+       case $((${#PAYLOAD} % 4)) in
+         2) PAYLOAD="${PAYLOAD}==" ;;
+         3) PAYLOAD="${PAYLOAD}=" ;;
+       esac
+
+       echo "$PAYLOAD" | base64 --decode | jq '{sub, aud}'
 
    - name: Configure AWS credentials
      uses: aws-actions/configure-aws-credentials@v6
