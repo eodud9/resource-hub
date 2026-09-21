@@ -12,6 +12,7 @@ jobs:
   permissions:
     contents: read
     packages: write
+    id-token: write
 
   services:
     mysql:
@@ -62,6 +63,13 @@ jobs:
        context: ./backend
        push: true
        tags: ghcr.io/${{ github.repository_owner }}/resourcehub:latest
+
+   - name: Configure AWS credentials
+     uses: aws-actions/configure-aws-credentials@v6
+     with:
+       role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+       aws-region: ap-northeast-2
+
    - name: Deploy to EC2
      uses: appleboy/ssh-action@v1
      with:
