@@ -1,6 +1,9 @@
 package com.resourcehub.backend.domain.reservation;
 
 import com.resourcehub.backend.domain.reservation.dto.ReservationCreateRequest;
+import com.resourcehub.backend.domain.resource.Resource;
+import com.resourcehub.backend.domain.resource.ResourceRepository;
+import com.resourcehub.backend.domain.resource.ResourceType;
 import com.resourcehub.backend.domain.user.User;
 import com.resourcehub.backend.domain.user.UserRepository;
 import com.resourcehub.backend.exception.ReservationConflictException;
@@ -32,10 +35,16 @@ public class ReservationConcurrencyTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ResourceRepository resourceRepository;
+
     @Test
     public void testRaceCondition() throws Exception{
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = new User("test@test.com",
+                "testPassword",
+                "testUser");
+
+        userRepository.save(user);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user,
@@ -49,8 +58,17 @@ public class ReservationConcurrencyTest {
         LocalDateTime startAt = LocalDateTime.parse("2026-09-29T20:00:00");
         LocalDateTime endAt = LocalDateTime.parse("2026-09-29T22:00:00");
 
+        Resource resource = new Resource(
+                "Test resource",
+                "This is test resource",
+                ResourceType.ROOM,
+                1
+        );
+
+        resourceRepository.save(resource);
+
         ReservationCreateRequest request = new ReservationCreateRequest(
-                1L, startAt, endAt);
+                resource.getId(), startAt, endAt);
 
         List<Future<?>> futures = new ArrayList<>();
 
