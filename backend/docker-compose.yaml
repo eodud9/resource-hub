@@ -12,7 +12,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/resourcehub
       SPRING_DATA_REDIS_HOST: redis
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      DB_USERNAME: root
+      DB_USERNAME: ${ROOT_USERNAME}
       DB_PASSWORD: ${ROOT_PASSWORD}
 
     depends_on:
