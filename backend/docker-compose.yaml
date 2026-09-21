@@ -12,6 +12,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/resourcehub
       SPRING_DATA_REDIS_HOST: redis
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_USERNAME: root
+      DB_PASSWORD: ${ROOT_PASSWORD}
 
     depends_on:
       mysql:
@@ -23,7 +25,7 @@ services:
 
     environment:
       MYSQL_DATABASE: resourcehub
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
 
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
