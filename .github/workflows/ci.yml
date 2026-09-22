@@ -70,6 +70,15 @@ jobs:
        role-to-assume: ${{ vars.AWS_ROLE_ARN }}
        aws-region: ap-northeast-2
 
+   - name: Test SSM connection
+     env:
+       INSTANCE_ID: ${{ vars.EC2_INSTANCE_ID }}
+     run: |
+       aws ssm send-command \
+          --instance-ids "$INSTANCE_ID" \
+          --document-name "AWS-RunShellScript" \
+          --parameters 'commands=["echo SSM deployment connection successful"]'
+
    - name: Deploy to EC2
      uses: appleboy/ssh-action@v1
      with:
