@@ -20,7 +20,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    private Long accessTokenExpiration = 1000L * 60L * 60L;
+    private Long accessTokenExpiration = 1000L * 10L;
 
     private Long refreshTokenExpiration = 1000L * 60L * 60L * 24L * 7L;
 
@@ -32,6 +32,7 @@ public class JwtTokenProvider {
                 .subject(user.getEmail())
                 .expiration(expirationTime)
                 .claim("type", "ACCESS")
+                .claim("role", user.getRole().name())
                 .signWith(key)
                 .compact();
     }
