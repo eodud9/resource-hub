@@ -18,4 +18,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             where   r.user.id = :userId
             """)
     List<Reservation> findByUserIdWithResource(@Param("userId") Long userId);
+
+    Boolean existsByResourceId(Long resourceId);
 }

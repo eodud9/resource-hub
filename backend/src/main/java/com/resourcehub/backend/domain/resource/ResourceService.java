@@ -1,9 +1,12 @@
 package com.resourcehub.backend.domain.resource;
 
+import com.resourcehub.backend.domain.reservation.Reservation;
+import com.resourcehub.backend.domain.reservation.ReservationRepository;
 import com.resourcehub.backend.domain.resource.dto.ResourceCreateRequest;
 import com.resourcehub.backend.domain.resource.dto.ResourceResponse;
 import com.resourcehub.backend.domain.resource.dto.ResourceUpdateRequest;
 import com.resourcehub.backend.domain.resource.event.ResourceChangedEvent;
+import com.resourcehub.backend.exception.ResourceDeleteConflictException;
 import com.resourcehub.backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,6 +22,7 @@ import java.util.List;
 public class ResourceService {
 
     private final ResourceRepository resourceRepository;
+    private final ReservationRepository reservationRepository;
     private final RedisTemplate<String, ResourceResponse> redisTemplate;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -69,8 +73,15 @@ public class ResourceService {
 
     @Transactional
     public void deleteResource(Long id){
+
+
+
         Resource resource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource Not Found"));
+
+        if (reservationRepository.existsByResourceId(resource.getId())){
+            throw new ResourceDeleteConflictException("예약이 존재하는 자원은 삭제할 수 없습니다.");
+        }
 
         resourceRepository.delete(resource);
 

@@ -26,16 +26,40 @@ const Navbar = () => {
   });
 
   return (
-    <nav>
-      <h1>Resourcehub</h1>
-      <Link to={"/resources"}>Resources</Link>
-      <Link to={"/reservations"}>My Reservations</Link>
-      <Link to={"/login"}>Login</Link>
-      <Link to={"/sign-up"}>Sign up</Link>
-      {isAdmin && <Link to={"/admin/resources"}>Resource Management</Link>}
-      <button onClick={() => logoutMutation.mutate()} disabled={logoutMutation.isPending}>
-        Logout
-      </button>
+    <nav className="border-b border-gray-200 bg-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <h1 className="text-2xl font-bold tracking-tight">ResourceHub</h1>
+        <div className="flex items-center gap-6">
+          <Link
+            to={"/resources"}
+            className="text-md font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+          >
+            Resources
+          </Link>
+          <Link
+            to={"/reservations"}
+            className="text-md font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+          >
+            My Reservations
+          </Link>
+          {isAdmin && (
+            <Link
+              to={"/admin/resources"}
+              className="text-md font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+            >
+              Resource Management
+            </Link>
+          )}
+          <button
+            onClick={() => logoutMutation.mutate()}
+            disabled={logoutMutation.isPending}
+            className="
+          rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:text-gray-700 disabled:opcaty-50 cursor-pointer transition-colors duration-200"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };

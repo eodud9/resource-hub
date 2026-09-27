@@ -14,7 +14,3 @@ export interface ReservationResponse {
   endAt: string;
   reservationStatus: ReservationStatus;
 }
-
-export interface ErrorResponse {
-  message: string;
-}

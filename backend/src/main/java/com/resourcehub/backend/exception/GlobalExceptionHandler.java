@@ -68,4 +68,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+
+    @ExceptionHandler(ResourceDeleteConflictException.class)
+    public ResponseEntity<ErrorResponse> handleDeleteResourceConflict(ResourceDeleteConflictException e){
+        ErrorResponse response = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
