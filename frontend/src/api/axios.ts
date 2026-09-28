@@ -2,8 +2,10 @@ import axios from "axios";
 import type { JwtPaload, LoginResponse } from "../types/auth";
 import { jwtDecode } from "jwt-decode";
 
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: VITE_API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
@@ -27,7 +29,7 @@ api.interceptors.response.use(
       try {
         originalRequest._retry = true;
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post<LoginResponse>("http://localhost:8080/api/users/refresh", { refreshToken });
+        const response = await axios.post<LoginResponse>(`${VITE_API_BASE_URL}/api/users/refresh`, { refreshToken });
 
         const { accessToken, refreshToken: newRefreshToken } = response.data;
         localStorage.setItem("accessToken", accessToken);
