@@ -40,6 +40,7 @@ export const SignUpPage = () => {
             placeholder="Name"
             type="text"
             value={name}
+            required
             onChange={(e) => setName(e.target.value)}
           />
           <FormInput
@@ -48,7 +49,8 @@ export const SignUpPage = () => {
             placeholder="Email"
             type="email"
             value={email}
-            className="mt-5"
+            containerClassName="mt-5"
+            required
             onChange={(e) => setEmail(e.target.value)}
           />
           <FormInput
@@ -57,7 +59,8 @@ export const SignUpPage = () => {
             placeholder="Password"
             type="password"
             value={password}
-            className="mt-5"
+            containerClassName="mt-5"
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
 

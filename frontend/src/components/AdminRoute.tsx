@@ -16,7 +16,7 @@ const AdminRoute = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 
-    return <Navigate to="login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

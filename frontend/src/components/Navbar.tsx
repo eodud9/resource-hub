@@ -13,7 +13,7 @@ const NavBarLink = ({ to, children }: NavBarLinkProps) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `text-md font-medium ${isActive ? "font-semibold text-gray-900" : "font-medium text-gray-600 hover:text-gray-900"} transition-colors duration-200`
+      `text-md ${isActive ? "font-semibold text-gray-900" : "font-medium text-gray-600 hover:text-gray-900"} transition-colors duration-200`
     }
   >
     {children}
@@ -27,9 +27,14 @@ const Navbar = () => {
 
   let isAdmin = false;
 
-  if (token) {
-    const payload = jwtDecode<JwtPayload>(token);
-    isAdmin = payload.role === "ADMIN";
+  try {
+    if (token) {
+      const payload = jwtDecode<JwtPayload>(token);
+      isAdmin = payload.role === "ADMIN";
+    }
+  } catch {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
   }
 
   const logoutMutation = useMutation({
@@ -53,7 +58,7 @@ const Navbar = () => {
             onClick={() => logoutMutation.mutate()}
             disabled={logoutMutation.isPending}
             className="
-          rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700 disabled:opcaity-50 cursor-pointer transition-colors duration-200"
+          rounded-md bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700 disabled:opacity-50 cursor-pointer transition-colors duration-200"
           >
             Logout
           </button>

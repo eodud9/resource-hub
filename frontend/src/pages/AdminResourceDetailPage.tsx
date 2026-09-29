@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteResource, getResource } from "../api/resource";
 import axios from "axios";
@@ -7,22 +7,33 @@ import type { ErrorResponse } from "../types/api";
 const AdminResourceDetailPage = () => {
   const { id } = useParams();
   const resourceId = Number(id);
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["resources", resourceId],
+    queryKey: ["resource", resourceId],
     queryFn: () => getResource(resourceId),
+    enabled: Number.isFinite(resourceId),
   });
+
   const navigate = useNavigate();
 
   const deleteMutation = useMutation({
     mutationFn: deleteResource,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["resource"],
+      });
       navigate("/admin/resources");
     },
   });
 
+  if (!Number.isFinite(resourceId)) {
+    return <div>Invalid resource.</div>;
+  }
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
-  if (!data) return <div>No Resource</div>;
+  if (!data) return <div>No resource available.</div>;
 
   function handleDelete() {
     deleteMutation.mutate(resourceId);
@@ -60,7 +71,7 @@ const AdminResourceDetailPage = () => {
 
         <div className="mt-5 flex justify-end gap-2">
           <button
-            onClick={() => navigate(`/admin/resources/${id}/edit`)}
+            onClick={() => navigate(`/admin/resources/${resourceId}/edit`)}
             className="cursor-pointer rounded-lg bg-gray-900 text-sm font-medium text-white transition-colors duration-200 hover:bg-gray-700 border-gray-300 px-4 py-2"
           >
             Update

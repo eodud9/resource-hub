@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { getResource } from "../api/resource";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { createReservation } from "../api/reservation";
 import axios from "axios";
 import type { ErrorResponse } from "../types/api";
+import FormInput from "../components/FormInput";
 
 const ResourceDetailPage = () => {
   const { id } = useParams();
@@ -16,18 +17,26 @@ const ResourceDetailPage = () => {
   const [startAt, setStartAt] = useState("");
   const [endAt, setEndAt] = useState("");
 
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["resource", resourceId],
     queryFn: () => getResource(resourceId),
+    enabled: Number.isFinite(resourceId),
   });
 
   const createMutation = useMutation({
     mutationFn: createReservation,
 
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["reservations"],
+      });
       navigate("/reservations");
     },
   });
+
+  if (!Number.isFinite(resourceId)) return <div>Invalid resource.</div>;
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,34 +82,24 @@ const ResourceDetailPage = () => {
           <h1 className="text-lg font-semibold text-gray-900">Create Reservation</h1>
           <p className="mt-1 text-sm text-gray-500">Select the start and end time for your reservation.</p>
         </div>
-        <form action="" onSubmit={handleSubmit} className="mt-6">
+        <form onSubmit={handleSubmit} className="mt-6">
           <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label htmlFor="startAt" className="mb-2 block text-sm font-medium text-gray-700">
-                Start Time
-              </label>
-              <input
-                id="startAt"
-                type="datetime-local"
-                value={startAt}
-                required
-                onChange={(e) => setStartAt(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition-colors duration-200 focus:border-gray-900"
-              />
-            </div>
-            <div>
-              <label htmlFor="endAt" className="mb-2 block text-sm font-medium text-gray-700">
-                End Time
-              </label>
-              <input
-                id="endAt"
-                type="datetime-local"
-                value={endAt}
-                required
-                onChange={(e) => setEndAt(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition-colors duration-200 focus:border-gray-900"
-              />
-            </div>
+            <FormInput
+              id="startAt"
+              type="datetime-local"
+              label="Start Time"
+              value={startAt}
+              required
+              onChange={(e) => setStartAt(e.target.value)}
+            />
+            <FormInput
+              id="endAt"
+              type="datetime-local"
+              label="End Time"
+              value={endAt}
+              required
+              onChange={(e) => setEndAt(e.target.value)}
+            />
           </div>
           <div className="mt-6 flex justify-end">
             <button
