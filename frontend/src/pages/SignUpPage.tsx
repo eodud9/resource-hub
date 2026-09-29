@@ -4,6 +4,7 @@ import { signup } from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import type { ErrorResponse } from "../types/api";
+import FormInput from "../components/FormInput";
 
 export const SignUpPage = () => {
   const [name, setName] = useState("");
@@ -16,11 +17,6 @@ export const SignUpPage = () => {
     mutationFn: signup,
     onSuccess: () => {
       navigate("/login");
-    },
-    onError: () => {
-      setName("");
-      setEmail("");
-      setPassword("");
     },
   });
 
@@ -37,49 +33,34 @@ export const SignUpPage = () => {
           <p className="mt-6 text-3xl font-semibold text-gray-900">Create an account</p>
           <p className="mt-2 text-sm font-medium text-gray-500">Get Started with ResourceHub</p>
         </div>
-        <form action="" onSubmit={handleSubmit} className="mt-8 rounded-xl border border-gray-200 p-8 bg-white">
-          <div>
-            <label htmlFor="name" className="text-sm font-medium block text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              placeholder="Name"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-2 w-full px-4 py-2 outline-none border border-gray-300 rounded-lg transition-colors duration-200 focus:border-gray-700"
-            />
-          </div>
-          <div className="mt-5">
-            <label htmlFor="email" className="text-sm font-medium block text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="Email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-2 w-full px-4 py-2 outline-none border border-gray-300 rounded-lg transition-colors duration-200 focus:border-gray-700"
-            />
-          </div>
-          <div className="mt-5">
-            <label htmlFor="password" className="text-sm font-medium block text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-2 w-full px-4 py-2 outline-none border border-gray-300 rounded-lg transition-colors duration-200 focus:border-gray-700"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="mt-8 rounded-xl border border-gray-200 p-8 bg-white">
+          <FormInput
+            id="name"
+            label="Name"
+            placeholder="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <FormInput
+            id="email"
+            label="Email"
+            placeholder="Email"
+            type="email"
+            value={email}
+            className="mt-5"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <FormInput
+            id="password"
+            label="Password"
+            placeholder="Password"
+            type="password"
+            value={password}
+            className="mt-5"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
           {createMutation.isError && (
             <p className="mt-5 text-sm font-medium text-red-500">
               {axios.isAxiosError<ErrorResponse>(createMutation.error)
@@ -90,14 +71,14 @@ export const SignUpPage = () => {
           <button
             type="submit"
             disabled={createMutation.isPending}
-            className="mt-5 w-full bg-gray-900 text-white rounded-lg px-4 py-2 cursor-pointer transition-colors duration-200 hover:bg-gray-700"
+            className="mt-5 w-full bg-gray-900 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {createMutation.isPending ? "Creating..." : "Create Account"}
           </button>
           <div className="mt-2 text-center">
             <span className="text-sm font-medium text-gray-500">Already have an account?</span>
             <Link
-              to={"/login"}
+              to="/login"
               className="text-gray-600 px-2 text-sm font-medium cursor-pointer transition-colors duration-200 hover:text-gray-900"
             >
               Sign In

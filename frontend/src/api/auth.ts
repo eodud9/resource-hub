@@ -1,10 +1,4 @@
-import type {
-  LoginRequest,
-  LoginResponse,
-  RefreshTokenRequest,
-  UserCreateRequest,
-  UserCreateResponse,
-} from "../types/auth";
+import type { LoginRequest, LoginResponse, UserCreateRequest, UserCreateResponse } from "../types/auth";
 import { api } from "./axios";
 
 export async function login(data: LoginRequest) {
@@ -21,10 +15,4 @@ export async function signup(data: UserCreateRequest) {
 
 export async function logout() {
   await api.post("/api/users/logout");
-}
-
-export async function refresh(refreshToken: RefreshTokenRequest) {
-  const response = await api.post("/api/users/refresh", refreshToken);
-
-  return response;
 }

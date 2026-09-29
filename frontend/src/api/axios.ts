@@ -1,11 +1,14 @@
-import axios from "axios";
-import type { JwtPaload, LoginResponse } from "../types/auth";
-import { jwtDecode } from "jwt-decode";
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import type { LoginResponse } from "../types/auth";
 
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+interface RetryAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = axios.create({
-  baseURL: VITE_API_BASE_URL,
+  baseURL: API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
@@ -13,7 +16,6 @@ api.interceptors.request.use((config) => {
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log(jwtDecode<JwtPaload>(token));
   }
 
   return config;
@@ -24,12 +26,20 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config as RetryAxiosRequestConfig;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       try {
         originalRequest._retry = true;
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post<LoginResponse>(`${VITE_API_BASE_URL}/api/users/refresh`, { refreshToken });
+
+        if (!refreshToken) {
+          localStorage.removeItem("refreshToken");
+          window.location.href = "/login";
+          return Promise.reject(error);
+        }
+
+        const response = await axios.post<LoginResponse>(`${API_BASE_URL}/api/users/refresh`, { refreshToken });
 
         const { accessToken, refreshToken: newRefreshToken } = response.data;
         localStorage.setItem("accessToken", accessToken);

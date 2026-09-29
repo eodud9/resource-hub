@@ -25,7 +25,7 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
-export interface JwtPaload {
+export interface JwtPayload {
   sub: string;
   type: string;
   role: "USER" | "ADMIN";
