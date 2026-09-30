@@ -1,6 +1,5 @@
 package com.resourcehub.backend.domain.resource;
 
-import com.resourcehub.backend.domain.reservation.Reservation;
 import com.resourcehub.backend.domain.reservation.ReservationRepository;
 import com.resourcehub.backend.domain.resource.dto.ResourceCreateRequest;
 import com.resourcehub.backend.domain.resource.dto.ResourceResponse;
@@ -51,7 +50,7 @@ public class ResourceService {
     public Resource createResource(ResourceCreateRequest request){
 
         Resource resource = new Resource(request.getName(), request.getDescription(),
-                request.getType(), request.getQuantity());
+                request.getType());
 
         return resourceRepository.save(resource);
     }

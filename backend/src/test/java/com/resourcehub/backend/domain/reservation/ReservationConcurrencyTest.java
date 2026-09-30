@@ -61,8 +61,7 @@ public class ReservationConcurrencyTest {
         Resource resource = new Resource(
                 "Test resource",
                 "This is test resource",
-                ResourceType.ROOM,
-                1
+                ResourceType.ROOM
         );
 
         resourceRepository.save(resource);

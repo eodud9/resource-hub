@@ -64,10 +64,6 @@ const AdminResourceDetailPage = () => {
           </span>
         </div>
         <p className="mt-6 text-sm leading-6 text-gray-600">{data.description}</p>
-        <div className="mt-6 border-t border-gray-100 pt-5">
-          <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Quantity</p>
-          <p className="mt-1 text-sm font-semibold text-gray-900">{data.quantity}</p>
-        </div>
 
         <div className="mt-5 flex justify-end gap-2">
           <button

@@ -5,7 +5,6 @@ export interface ResourceResponse {
   id: number;
   name: string;
   description: string;
-  quantity: number;
   type: ResourceType;
   status: ResourceStatus;
 }
@@ -13,6 +12,5 @@ export interface ResourceResponse {
 export interface ResourceRequest {
   name: string;
   description: string;
-  quantity: number;
   type: ResourceType;
 }

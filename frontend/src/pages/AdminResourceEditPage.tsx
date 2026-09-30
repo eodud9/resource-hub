@@ -58,7 +58,6 @@ const AdminResourceEditPage = () => {
           name: data.name,
           description: data.description,
           type: data.type,
-          quantity: data.quantity,
         }}
         submitLabel="Update"
         pendingLabel="Updating..."

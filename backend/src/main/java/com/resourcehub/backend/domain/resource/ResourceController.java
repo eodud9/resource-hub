@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/resources")
+@RequestMapping("/api/resources")
 @RequiredArgsConstructor
 public class ResourceController {
     private final ResourceService resourceService;
@@ -36,7 +36,7 @@ public class ResourceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResourceResponse> updateResource(@PathVariable Long id,
-                                                           @RequestBody ResourceUpdateRequest request){
+                                                           @Valid @RequestBody ResourceUpdateRequest request){
         ResourceResponse response = resourceService.updateResource(id, request);
 
         return ResponseEntity.ok(response);

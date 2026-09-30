@@ -22,11 +22,10 @@ const ResourceForm = ({
   const [name, setName] = useState(initialValues?.name ?? "");
   const [type, setType] = useState<ResourceType>(initialValues?.type ?? "EQUIPMENT");
   const [description, setDescription] = useState(initialValues?.description ?? "");
-  const [quantity, setQuantity] = useState(initialValues?.quantity ?? 1);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSubmit({ name, type, description, quantity });
+    onSubmit({ name, type, description });
   }
 
   return (
@@ -75,17 +74,6 @@ const ResourceForm = ({
           className="text-sm font-medium w-full border border-gray-300 rounded-lg px-4 py-2 outline-none transition-colors duration-200 focus:border-gray-600"
         />
       </div>
-      <FormInput
-        id="quantity"
-        value={quantity}
-        label="Quantity"
-        type="number"
-        placeholder="Quantity"
-        required
-        min={1}
-        containerClassName="mt-6"
-        onChange={(e) => setQuantity(Number(e.target.value))}
-      />
 
       <div className="mt-6 flex justify-end gap-2">
         {onCancel && (

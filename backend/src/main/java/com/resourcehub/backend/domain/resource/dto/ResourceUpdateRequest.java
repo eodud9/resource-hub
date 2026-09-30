@@ -19,10 +19,6 @@ public class ResourceUpdateRequest {
 
     @NotNull
     private ResourceType type;
-
-    @NotNull
-    @Min(1)
-    private Integer quantity;
 }
 
 

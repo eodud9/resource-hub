@@ -13,7 +13,6 @@ const AdminResourceTable = ({ resources }: AdminResourceTableProps) => {
           <tr>
             <th className="px-5 py-3 font-medium text-gray-600">Name</th>
             <th className="px-5 py-3 font-medium text-gray-600">Type</th>
-            <th className="px-5 py-3 font-medium text-gray-600">Quantity</th>
             <th className="px-5 py-3 font-medium text-gray-600">Status</th>
             <th className="px-5 py-3 font-medium text-gray-600">Action</th>
           </tr>
@@ -23,7 +22,6 @@ const AdminResourceTable = ({ resources }: AdminResourceTableProps) => {
             <tr key={resource.id} className="border-b border-gray-100 last:border-b-0">
               <td className="px-5 py-4 font-medium text-gray-900">{resource.name}</td>
               <td className="px-5 py-4 text-gray-500">{resource.type}</td>
-              <td className="px-5 py-4 text-gray-500">{resource.quantity}</td>
               <td className="px-5 py-4">
                 <span
                   className={

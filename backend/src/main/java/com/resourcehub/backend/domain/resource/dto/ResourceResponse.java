@@ -12,7 +12,6 @@ public class ResourceResponse {
     private Long id;
     private String name;
     private String description;
-    private Integer quantity;
     private ResourceType type;
     private ResourceStatus status;
 
@@ -20,7 +19,6 @@ public class ResourceResponse {
         this.id = resource.getId();
         this.name = resource.getName();
         this.description = resource.getDescription();
-        this.quantity = resource.getQuantity();
         this.type = resource.getType();
         this.status = resource.getStatus();
     }
