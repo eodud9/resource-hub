@@ -20,7 +20,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    private Long accessTokenExpiration = 1000L * 10L;
+    private Long accessTokenExpiration = 1000L * 60L * 10L;
 
     private Long refreshTokenExpiration = 1000L * 60L * 60L * 24L * 7L;
 

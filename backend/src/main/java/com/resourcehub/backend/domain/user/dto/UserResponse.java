@@ -1,7 +1,6 @@
 package com.resourcehub.backend.domain.user.dto;
 
 import com.resourcehub.backend.domain.user.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

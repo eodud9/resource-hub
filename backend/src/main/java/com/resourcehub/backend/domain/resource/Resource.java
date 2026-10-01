@@ -1,7 +1,6 @@
 package com.resourcehub.backend.domain.resource;
 
 import com.resourcehub.backend.common.BaseEntity;
-import com.resourcehub.backend.domain.resource.dto.ResourceUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,9 +36,9 @@ public class Resource extends BaseEntity {
         this.status = ResourceStatus.AVAILABLE;
     }
 
-    public void update(ResourceUpdateRequest request){
-        this.name = request.getName();
-        this.description = request.getDescription();
-        this.type = request.getType();
+    public void update(String name, String description, ResourceType type){
+        this.name = name;
+        this.description = description;
+        this.type = type;
     }
 }

@@ -61,11 +61,9 @@ public class ResourceService {
         Resource resource = resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource Not Found"));
 
-        resource.update(request);
+        resource.update(request.getName(), request.getDescription(), request.getType());
 
         eventPublisher.publishEvent(new ResourceChangedEvent(id));
-
-//        throw new RuntimeException("ROLLBACK 테스트");
 
         return new ResourceResponse(resource);
     }

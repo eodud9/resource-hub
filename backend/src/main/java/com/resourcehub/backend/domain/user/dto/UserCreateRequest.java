@@ -1,11 +1,9 @@
 package com.resourcehub.backend.domain.user.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class UserCreateRequest {
     @Email
     @NotBlank
